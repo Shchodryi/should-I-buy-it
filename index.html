@@ -21,6 +21,7 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             max-width: 500px;
             text-align: center;
+            position: relative;
         }
         h1 {
             font-size: 24px;
@@ -64,6 +65,15 @@
         .history-item {
             margin-bottom: 10px;
         }
+        footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #aaa;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
     </style>
 </head>
 <body>
@@ -72,7 +82,7 @@
     <div id="initialScreen">
         <h1>Should I Buy It?</h1>
         <p class="intro">Use this interactive app to help decide whether you should buy an item by answering a series of thoughtful questions and keeping track of your decisions.</p>
-        <input type="text" id="itemInput" placeholder="Enter what do you want to buy?">
+        <input type="text" id="itemInput" placeholder="What do you want to buy?">
         <button onclick="start()">Start</button>
     </div>
     <div id="questionScreen" style="display: none;">
@@ -82,6 +92,7 @@
         <button onclick="answer('no')">No</button>
     </div>
     <div class="history" id="history"></div>
+    <footer>Made by Mark Zuckerberg</footer>
 </div>
 
 <script>
@@ -170,6 +181,7 @@
                 <button onclick="answer('no')">No</button>
             </div>
             <div class="history" id="history"></div>
+            <footer>Made by Mark Zuckerberg</footer>
         `;
         updateHistory();
     }
