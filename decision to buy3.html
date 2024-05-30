@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Should I Buy It?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 500px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        p.intro {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: 2px solid #FF0000;
+            background-color: #fff;
+            color: #FF0000;
+            cursor: pointer;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #FF0000;
+            color: #fff;
+        }
+        input {
+            padding: 10px;
+            margin: 10px;
+            width: calc(100% - 20px);
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .item-display {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .history {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .history-item {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="container">
+    <div id="initialScreen">
+        <h1>Should I Buy It?</h1>
+        <p class="intro">Use this interactive app to help decide whether you should buy an item by answering a series of thoughtful questions and keeping track of your decisions.</p>
+        <input type="text" id="itemInput" placeholder="Enter what do you want to buy?">
+        <button onclick="start()">Start</button>
+    </div>
+    <div id="questionScreen" style="display: none;">
+        <p class="item-display" id="itemDisplay"></p>
+        <p id="question"></p>
+        <button onclick="answer('yes')">Yes</button>
+        <button onclick="answer('no')">No</button>
+    </div>
+    <div class="history" id="history"></div>
+</div>
+
+<script>
+    const questions = [
+        "Do I really need this item? Can I live without it?",
+        "Can I afford it? Do I have the money to buy this without affecting my essential expenses?",
+        "Have I done enough research? Have I compared prices and options?",
+        "Have I read reviews or sought recommendations?",
+        "Is this the best time to buy?",
+        "Can it wait for a sale or discount?",
+        "Are there any additional expenses (accessories, etc.)?",
+        "Do I already own something similar?",
+        "Can I use something I already have instead?",
+        "Is it a duplicate of something I rarely use?",
+        "Do I have enough space to store it?",
+        "Is it something I’ll use regularly, or will it sit unused?",
+        "Am I influenced by advertising, peer pressure, or social media trends?",
+        "Are there cheaper or more practical alternatives?",
+        "Can I return it if it doesn’t meet my expectations?",
+        "Can I delay the purchase?"
+    ];
+
+    let currentQuestion = 0;
+    let yesCount = 0;
+    let itemToBuy = "";
+    let decisionHistory = [];
+
+    function start() {
+        itemToBuy = document.getElementById('itemInput').value;
+        if (itemToBuy) {
+            currentQuestion = 0;
+            yesCount = 0;
+            document.getElementById('initialScreen').style.display = 'none';
+            document.getElementById('questionScreen').style.display = 'block';
+            document.getElementById('itemDisplay').innerText = `You want to buy: ${itemToBuy}`;
+            document.getElementById('question').innerText = questions[currentQuestion];
+        } else {
+            alert("Please enter the item you want to buy.");
+        }
+    }
+
+    function answer(response) {
+        if (response === 'yes') {
+            yesCount++;
+        }
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+            document.getElementById('question').innerText = questions[currentQuestion];
+        } else {
+            showDecision();
+        }
+    }
+
+    function showDecision() {
+        const decision = yesCount > questions.length / 2 
+            ? `Based on your responses, it seems like buying ${itemToBuy} might be necessary for you.`
+            : `Based on your responses, it might be better to reconsider buying ${itemToBuy}.`;
+        document.getElementById('questionScreen').innerHTML = `<h1>Decision</h1><p>${decision}</p><button onclick="startOver()">Start Over</button>`;
+        decisionHistory.push(`Item: ${itemToBuy} - Decision: ${decision}`);
+        updateHistory();
+    }
+
+    function updateHistory() {
+        const historyContainer = document.getElementById('history');
+        historyContainer.innerHTML = '<h2>History</h2>';
+        decisionHistory.forEach((item, index) => {
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            historyItem.innerText = `${index + 1}. ${item}`;
+            historyContainer.appendChild(historyItem);
+        });
+    }
+
+    function startOver() {
+        document.getElementById('container').innerHTML = `
+            <div id="initialScreen">
+                <h1>Should I Buy It?</h1>
+                <p class="intro">Use this interactive app to help decide whether you should buy an item by answering a series of thoughtful questions and keeping track of your decisions.</p>
+                <input type="text" id="itemInput" placeholder="What do you want to buy?">
+                <button onclick="start()">Start</button>
+            </div>
+            <div id="questionScreen" style="display: none;">
+                <p class="item-display" id="itemDisplay"></p>
+                <p id="question"></p>
+                <button onclick="answer('yes')">Yes</button>
+                <button onclick="answer('no')">No</button>
+            </div>
+            <div class="history" id="history"></div>
+        `;
+        updateHistory();
+    }
+</script>
+
+</body>
+</html>
